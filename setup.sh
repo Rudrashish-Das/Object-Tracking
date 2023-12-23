@@ -1,6 +1,6 @@
 git clone https://github.com/ifzhang/ByteTrack.git
 sudo apt-get install ffmpeg libsm6 libxext6 python3-pip -y
-pip install protobuf==3.20.*
+pip install protobuf==3.20.* flask flask-cors
 pip install numpy==1.23.4
 pip install ultralytics --no-cache-dir
 pip install -r requirements.txt --no-cache-dir
