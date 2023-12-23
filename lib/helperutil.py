@@ -9,6 +9,7 @@ from supervision.tools.line_counter import LineCounter, LineCounterAnnotator
 
 from typing import List
 import numpy as np
+import subprocess, time, os
 
 from yolox.tracker.byte_tracker import BYTETracker, STrack
 from onemetric.cv.utils.iou import box_iou_batch
@@ -61,3 +62,44 @@ def match_detections_with_tracks(
             tracker_ids[detection_index] = tracks[tracker_index].track_id
 
     return tracker_ids
+
+def download_video_segment(url, output_filename, duration=1):
+    try:
+        command = [
+            "ffmpeg",
+            "-y",
+            "-i", url,
+            "-t", str(duration),
+            "-c", "copy",
+            output_filename
+        ]
+        subprocess.run(command, check=True)
+    except Exception as e:
+        raise (e)
+
+
+def delete_old_files(file_list):
+    current_time = time.time()
+
+    while file_list:
+        filename = file_list[0]  # Get the first file in the list
+        file_path = filename
+
+        # Get the file creation time
+        creation_time = os.path.getctime(file_path)
+
+        # Calculate the age of the file in seconds
+        file_age = current_time - creation_time
+
+        # Check if the file is older than 20 seconds and delete it
+        if file_age > 20:
+            print(f"Deleting {filename} created {file_age:.2f} seconds ago.")
+            os.remove(file_path)
+            file_list.pop(0)  # Remove the first file from the list
+        else:
+            break  # Stop deleting if the first file is not older than 20 seconds
+
+def periodic_file_deletion(file_list, interval_seconds):
+    while True:
+        delete_old_files(file_list)
+        time.sleep(interval_seconds)
