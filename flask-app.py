@@ -75,8 +75,8 @@ latest_frame = None
 # lock = threading.Lock()
 
 connected = 0
-last_called = time.time()
-time.sleep(TIMEOUT + 5)
+last_called = 0 # time.time()
+#time.sleep(TIMEOUT + 5)
 video_error = None
 
 def object_tracking(source, output="output.mp4", stream=False, random_out=False):
